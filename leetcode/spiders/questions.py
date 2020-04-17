@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-
 """
-Scrape some sort of website...
+Scrape Leetcode's GraphQL questions endpoint.
 """
 
 import json
