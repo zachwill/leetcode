@@ -1,0 +1,6 @@
+.scrapy/*
+leetcode/notebooks/.ipynb_checkpoints/*
+*.db
+*.db-*
+*.log
+*.pyc

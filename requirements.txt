@@ -1,0 +1,8 @@
+fake-useragent>=0.1.11
+ftfy>=5.6
+html2text>=2019.9.26
+jellyfish>=0.7
+moment>=1.0
+pandas>=0.25
+peewee>=3.13
+Scrapy>=2.0
