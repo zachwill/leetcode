@@ -15,5 +15,5 @@ python models.py
 
 ```bash
 # Run the example spider
-scrapy crawl example
+scrapy crawl questions
 ```
