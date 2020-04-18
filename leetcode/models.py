@@ -12,7 +12,6 @@ from playhouse.sqliteq import SqliteQueueDatabase
 
 
 db = SqliteQueueDatabase("leetcode.db", autostart=True)
-# db = SqliteDatabase("leetcode.db")
 
 
 class BaseModel(Model):
@@ -44,7 +43,7 @@ class BaseModel(Model):
 
 
 # ----------------------------------------------------------------------------
-# Example Models
+# Leetcode Models
 # ----------------------------------------------------------------------------
 
 class Question(BaseModel):
@@ -123,8 +122,9 @@ class Solution(BaseModel):
 # Automatically create the tables...
 # ----------------------------------------------------------------------------
 
-
 def create_tables():
+    global db
+    db = SqliteDatabase("leetcode.db")
     models = []
     for name, cls in globals().items():
         if inspect.isclass(cls) and issubclass(cls, BaseModel):
