@@ -35,9 +35,7 @@ DOWNLOADER_MIDDLEWARES = {
 }
 
 # Configure item pipelines
-ITEM_PIPELINES = {
-    "leetcode.pipelines.ModelPipeline": 300,
-}
+ITEM_PIPELINES = {"leetcode.pipelines.ModelPipeline": 300}
 
 # Enable and configure HTTP caching (disabled by default)
 HTTPCACHE_ENABLED = True

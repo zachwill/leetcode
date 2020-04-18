@@ -14,6 +14,9 @@ python models.py
 ### Usage
 
 ```bash
-# Run the example spider
+# Grab initial question list
+scrapy crawl categories
+
+# Scrape question data
 scrapy crawl questions
 ```

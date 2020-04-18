@@ -6,7 +6,7 @@ import json
 
 from scrapy import Request, Spider
 
-from peewee import fn
+from peewee import fn, JOIN
 
 from leetcode.items import DefaultLoader, Question, Solution, Hint, Tag, SimilarQuestion
 from leetcode import models as mod
@@ -19,8 +19,13 @@ class LeetcodeQuestionsSpider(Spider):
 
     def start_requests(self):
         query = (
-            mod.Problem.select()
-            # .where(mod.Problem.slug == "two-sum")
+            mod.Question.select()
+            .join(
+                mod.Solution,
+                JOIN.LEFT_OUTER,
+                on=(mod.Question.question_id == mod.Solution.question_id),
+            )
+            .where(mod.Solution.question_id.is_null())
             .order_by(fn.Random())
             # .limit(50)
         )
@@ -28,19 +33,19 @@ class LeetcodeQuestionsSpider(Spider):
             url = "https://leetcode.com/graphql"
             data = {
                 "query": GRAPHQL_QUERY,
-                "variables": {"titleSlug": row.slug},
+                "variables": {"titleSlug": row.question_id},
                 "operationName": "getQuestionDetail",
             }
             headers = {
-                "Origin": "https://leetcode.com",
-                "Referer": f"https://leetcode.com/problems/{row.slug}/description",
-                "X-Requested-With": "XMLHttpRequest",
-                # "X-CSRFToken": csrf,
                 "Content-Type": "application/json",
+                "Origin": "https://leetcode.com",
+                "Referer": f"https://leetcode.com/problems/{row.question_id}/description",
+                "X-Requested-With": "XMLHttpRequest",
             }
-            meta = {"slug": row.slug}
+            meta = {"slug": row.question_id}
             yield Request(
-                url, method="POST",
+                url,
+                method="POST",
                 body=json.dumps(data),
                 headers=headers,
                 meta=meta,
@@ -110,10 +115,11 @@ class LeetcodeQuestionsSpider(Spider):
 
         if "rating" in data["solution"] and data["solution"]["rating"]:
             load_solution.add_value("rating", data["solution"]["rating"].get("average"))
-            load_solution.add_value("rating_count", data["solution"]["rating"].get("count"))
+            load_solution.add_value(
+                "rating_count", data["solution"]["rating"].get("count")
+            )
 
         yield load_solution.load_item()
-
 
 
 GRAPHQL_QUERY = """

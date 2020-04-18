@@ -47,24 +47,6 @@ class BaseModel(Model):
 # Example Models
 # ----------------------------------------------------------------------------
 
-
-class Problem(BaseModel):
-    id = IntegerField(primary_key=True)
-    slug = TextField(null=True)
-    title = TextField(null=True)
-    hidden = IntegerField(null=True)
-    total_acs = IntegerField(null=True)
-    total_submitted = IntegerField(null=True)
-    frontend_question_id = IntegerField(null=True)
-    is_new = IntegerField(null=True)
-    status = TextField(null=True)
-    difficulty = IntegerField(null=True)
-    paid_only = IntegerField(null=True)
-
-    class Meta:
-        db_table = "problems"
-
-
 class Question(BaseModel):
     leetcode_id = IntegerField()
     question_id = TextField(primary_key=True)
@@ -82,6 +64,13 @@ class Question(BaseModel):
 
     class Meta:
         db_table = "question"
+
+    @classmethod
+    def from_scrapy_item(cls, item):
+        question_id = item.pop("question_id")
+        query = cls.insert(question_id=question_id, **item).on_conflict("IGNORE")
+        query.execute()
+        return cls.update(**item).where((cls.question_id == question_id)).execute()
 
 
 class SimilarQuestion(BaseModel):

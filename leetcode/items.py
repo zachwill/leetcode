@@ -18,6 +18,7 @@ from leetcode import models
 # Processors
 # ----------------------------------------------------------------------------
 
+
 def strip_whitespace(text):
     text = str(text).replace("\n", " ").replace("\r", " ").strip()
     if text == "":
@@ -40,6 +41,7 @@ def unix_time_to_date(text):
 # ----------------------------------------------------------------------------
 # Utilities
 # ----------------------------------------------------------------------------
+
 
 class DefaultLoader(ItemLoader):
     default_input_processor = MapCompose(strip_whitespace)
@@ -70,9 +72,9 @@ class ModelItem(Item):
 
         if kwds is not None:
             for key, processor in kwds.items():
-                self.fields[key] = Field(input_processor=MapCompose(
-                    strip_whitespace, processor
-                ))
+                self.fields[key] = Field(
+                    input_processor=MapCompose(strip_whitespace, processor)
+                )
 
     def __setitem__(self, key, value):
         if key not in self.fields:
@@ -93,10 +95,6 @@ class ModelItem(Item):
 # ----------------------------------------------------------------------------
 # Example Items
 # ----------------------------------------------------------------------------
-
-class Problem(ModelItem):
-    __model__ = models.Problem
-
 
 class Question(ModelItem):
     __model__ = models.Question
